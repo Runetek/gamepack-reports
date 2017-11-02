@@ -1,49 +1,64 @@
 <template>
   <section class="section">
-    <div class="field">
-      <label for="revision" class="label">Revision</label>
-      <div class="control">
-        <div class="select">
-          <select
-            id="revision"
-            name="revision"
-            v-model="revision"
-          >
-            <option value="">Select a revision</option>
-            <option
-              v-for="rev in revisions"
-              :value="rev"
-              :key="rev"
-            >
-              {{ rev }}
-            </option>
-          </select>
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <label for="revision" class="label">Revision</label>
+          <div class="control">
+            <div class="select">
+              <select
+                id="revision"
+                name="revision"
+                v-model="revision"
+              >
+                <option value="">Select a revision</option>
+                <option
+                  v-for="rev in revisions"
+                  :value="rev"
+                  :key="rev"
+                >
+                  {{ rev }}
+                </option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="field">
-      <label for="report-type" class="label">Report Type</label>
-      <div class="control">
-        <div class="select">
-          <select
-            id="report-type"
-            name="report-type"
-            v-model="reportType"
-          >
-            <option value="">Select a report</option>
-            <option
-              v-for="report in reportTypes"
-              :value="report"
-              :key="report"
-            >
-              {{ shortName(report) }}
-            </option>
-          </select>
+      <div class="column">
+        <div class="field">
+          <label for="report-type" class="label">Report Type</label>
+          <div class="control">
+            <div class="select">
+              <select
+                id="report-type"
+                name="report-type"
+                v-model="reportType"
+              >
+                <option value="">Select a report</option>
+                <option
+                  v-for="report in reportTypes"
+                  :value="report"
+                  :key="report"
+                >
+                  {{ shortName(report) }}
+                </option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <p v-if="reportType.startsWith('com.uniquepassive.osrsexploits')">
-      View Source
+      <a
+        class="button is-small"
+        target="_blank"
+        :href="`https://github.com/UniquePassive/osrs-exploits/blob/master/src/main/java/${reportType.replace(/\./g, '/')}.java`"
+      >
+        <span class="icon">
+          <i class="fa fa-github"></i>
+        </span>
+        <span>{{ shortName(reportType) }}.java</span>
+      </a>
       <a
         class="button is-small"
         target="_blank"
@@ -55,7 +70,9 @@
         <span>UniquePassive/osrs-exploits</span>
       </a>
     </p>
-    <pre v-text="report"></pre>
+    <div class="box">
+      <pre v-text="report"></pre>
+    </div>
   </section>
 </template>
 
