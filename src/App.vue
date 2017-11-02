@@ -9,6 +9,7 @@
 </template>
 
 <style src="bulma/bulma.sass" lang="sass"></style>
+<style src="font-awesome/css/font-awesome.css" lang="css"></style>
 
 <script>
 export default {

@@ -42,6 +42,19 @@
         </div>
       </div>
     </div>
+    <p v-if="reportType.startsWith('com.uniquepassive.osrsexploits')">
+      View Source
+      <a
+        class="button is-small"
+        target="_blank"
+        href="https://github.com/UniquePassive/osrs-exploits"
+      >
+        <span class="icon">
+          <i class="fa fa-github"></i>
+        </span>
+        <span>UniquePassive/osrs-exploits</span>
+      </a>
+    </p>
     <pre v-text="report"></pre>
   </section>
 </template>
