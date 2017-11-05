@@ -48,6 +48,28 @@
         </div>
       </div>
     </div>
+    <div class="field">
+      <div v-if="artifacts.deob" class="is-inline-block">
+        <a
+          :href="artifacts.deob.url"
+          target="_blank"
+          class="tags has-addons"
+        >
+          <span class="tag is-dark">Artifact</span>
+          <span class="tag is-danger">runelite-deob.jar</span>
+        </a>
+      </div>
+      <div v-if="artifacts.pack" class="is-inline-block">
+        <a
+          :href="artifacts.pack.url"
+          target="_blank"
+          class="tags has-addons"
+        >
+          <span class="tag is-dark">Artifact</span>
+          <span class="tag is-warning">gamepack.jar</span>
+        </a>
+      </div>
+    </div>
     <p v-if="reportType.startsWith('com.uniquepassive.osrsexploits')">
       <a
         class="button is-small"
@@ -85,6 +107,10 @@ const reports = Axios.create({
   baseURL: 'https://storage.runetek.io/reports'
 })
 
+const gpack = Axios.create({
+  baseURL: 'https://gpack.me/api'
+})
+
 export default {
   name: 'ReportViewer',
   props: {
@@ -98,7 +124,11 @@ export default {
       loading: false,
       revision: this.$route.query.rev || '',
       reportType: this.$route.query.rt || '',
-      report: ''
+      report: '',
+      artifacts: {
+        pack: null,
+        deob: null
+      }
     }
   },
   computed: {
@@ -121,6 +151,15 @@ export default {
     }
   },
   methods: {
+    fetchArtifacts () {
+      gpack.get(`artifacts/${this.revision}`)
+        .then(({ data }) => {
+          this.artifacts = {
+            ...this.artifacts,
+            ...data
+          }
+        })
+    },
     shortName (reportType) {
       return last(reportType.split('.'))
     },
@@ -142,12 +181,14 @@ export default {
         } else {
           this.keys = xml.ListBucketResult.Contents.map(x => x.Key[0])
           this.$nextTick(() => this.fetchReport())
+          this.$nextTick(() => this.fetchArtifacts())
         }
       }))
   },
   watch: {
     revision (rev) {
       this.fetchReport()
+      this.fetchArtifacts()
       if (rev !== '') {
         this.$router.push({
           name: 'reports',
