@@ -106,7 +106,7 @@ export default {
       return sortBy(uniq(this.keys.map(x => x.split('/')[0])), x => +x)
     },
     reportTypes () {
-      return uniq(this.keys.map(x => x.split('/')[1].replace(/\.txt$/, '')))
+      return uniq(this.keys.map(x => x.split('/')[1].replace(/\.(txt|json)$/, '')))
     },
     shortReportTypes () {
       return this.reportTypes.map(x => this.shortName(x))
