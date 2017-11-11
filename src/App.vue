@@ -8,7 +8,8 @@
   </div>
 </template>
 
-<style src="bulma/bulma.sass" lang="sass"></style>
+<!--<style src="bulma/bulma.sass" lang="sass"></style>-->
+<style src="./assets/bulma-theme.min.css" lang="css"></style>
 <style src="font-awesome/css/font-awesome.css" lang="css"></style>
 
 <script>
