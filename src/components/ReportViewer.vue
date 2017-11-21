@@ -162,6 +162,12 @@ export default {
     shortName (reportType) {
       return last(reportType.split('.'))
     },
+    fetchReports () {
+      gpackV2.get(`reports/${this.revision}`)
+        .then(({ data }) => {
+          this.reportTypes = data.data.map(x => x.fqcn)
+        })
+    },
     fetchReport () {
       const path = this.reportPath
       if (path) {
@@ -175,14 +181,16 @@ export default {
   mounted () {
     gpackV2.get('/search_index')
       .then(({ data }) => {
-        this.reportTypes = data.reportTypes
         this.revisions = data.revisions
       })
+      .then(() => this.fetchReports())
+      .then(() => this.fetchReport())
   },
   watch: {
     revision (rev) {
       this.fetchReport()
       this.fetchArtifacts()
+      this.fetchReports()
       if (rev !== '') {
         this.$router.push({
           name: 'reports',
