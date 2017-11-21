@@ -100,8 +100,7 @@
 
 <script>
 import Axios from 'axios'
-import { parseString } from 'xml2js'
-import { last, sortBy, uniq } from 'lodash'
+import { last } from 'lodash'
 
 const reports = Axios.create({
   baseURL: 'https://storage.runetek.io/reports'
@@ -109,6 +108,10 @@ const reports = Axios.create({
 
 const gpack = Axios.create({
   baseURL: 'https://gpack.me/api'
+})
+
+const gpackV2 = Axios.create({
+  baseURL: 'https://gpack.me/api/v2'
 })
 
 export default {
@@ -122,9 +125,11 @@ export default {
       keys: [],
       cache: {},
       loading: false,
-      revision: this.$route.query.rev || '',
-      reportType: this.$route.query.rt || '',
+      revision: (this.rev || this.$route.query.rev) || '',
+      reportType: (this.rt || this.$route.query.rt) || '',
       report: '',
+      reportTypes: [],
+      revisions: [],
       artifacts: {
         pack: null,
         deob: null
@@ -132,12 +137,6 @@ export default {
     }
   },
   computed: {
-    revisions () {
-      return sortBy(uniq(this.keys.map(x => x.split('/')[0])), x => +x)
-    },
-    reportTypes () {
-      return uniq(this.keys.map(x => x.split('/')[1].replace(/\.(txt|json)$/, '')))
-    },
     shortReportTypes () {
       return this.reportTypes.map(x => this.shortName(x))
     },
@@ -174,16 +173,11 @@ export default {
     }
   },
   mounted () {
-    reports.get('/')
-      .then(({ data }) => parseString(data, (err, xml) => {
-        if (err) {
-          throw err
-        } else {
-          this.keys = xml.ListBucketResult.Contents.map(x => x.Key[0])
-          this.$nextTick(() => this.fetchReport())
-          this.$nextTick(() => this.fetchArtifacts())
-        }
-      }))
+    gpackV2.get('/search_index')
+      .then(({ data }) => {
+        this.reportTypes = data.reportTypes
+        this.revisions = data.revisions
+      })
   },
   watch: {
     revision (rev) {
