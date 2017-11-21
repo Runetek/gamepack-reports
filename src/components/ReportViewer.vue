@@ -111,7 +111,7 @@ const gpack = Axios.create({
 })
 
 const gpackV2 = Axios.create({
-  baseURL: 'https://gpack.me/api/v2'
+  baseURL: 'https://api.gpack.me'
 })
 
 export default {
