@@ -179,6 +179,10 @@ export default {
     }
   },
   mounted () {
+    if (this.revision) {
+      this.fetchArtifacts()
+    }
+
     gpackV2.get('/search_index')
       .then(({ data }) => {
         this.revisions = data.revisions
